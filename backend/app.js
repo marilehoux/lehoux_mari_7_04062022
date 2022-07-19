@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const app = express();
+const path = require('path');
 
 //require ('dotenv').config(); Important!! Requis pour utiliser les variables d'environenement
 
@@ -21,7 +22,8 @@ mongoose.connect(process.env.CONNECT,
   .then(() => console.log('Connexion à MongoDB réussie !? yes'))
   .catch(() => console.log('la connexion à la base de données a echouée!'));
 
-  app.use(express.json());
+app.use(express.json());
+app.use('/images', express.static(path.join(__dirname, 'images')));
 
 app.use('/api/post', postRoutes);
 app.use('/api/auth', userRoutes);

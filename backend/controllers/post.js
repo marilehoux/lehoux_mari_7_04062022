@@ -18,7 +18,7 @@ exports.getAllPost = (req, res, next) => {
     );
   };
 
-  //pour créer un post enregistre l'image 
+  //pour créer un post enregistre l'image si elle existe
   exports.createPost = (req, res, next) => {
     console.log(req.body)
     const postObject = req.body;
@@ -26,7 +26,7 @@ exports.getAllPost = (req, res, next) => {
     delete postObject._id;
     const post = new Post({
       ...postObject, 
-      //userId: req.auth.userId,
+      userId: req.auth.userId,
       imageUrl: req.file
         ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
         : null
@@ -53,35 +53,62 @@ exports.getAllPost = (req, res, next) => {
 
   //pour modifier un post
   exports.modifyPost = (req, res, next) => {
-    // récupère le post
-    // si existe pas error
-    // si createur post === utilisateur connecté OU utilisateur connecté est un admin
+    // récupère le Post, gère s'il existe ou non
+    const postObject =req.file? {
+      ...JSON.parse(req.body.post),
+      imageUrl: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`,
+    } : {...req.body};
     
-    // sinon erreur connection
-    Sauce.findOne({ _id: req.params.id }).then((post) => {
-      const filename = post.imageUrl.split("/images/")[1];
-      fs.unlink(`images/${filename}`, () => {
-        const postObject = req.file? {
-              ...JSON.parse(req.body.post),
-              imageUrl: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`,
-            }
-          : { ...req.body };
-        Sauce.updateOne(
-          { _id: req.params.id },
-          { ...postObject, _id: req.params.id }
-        )
-          .then(() => res.status(200).json({ message: "Post modifié !" }))
-          .catch((error) => res.status(400).json({ error }));
-      });
-    });
-  };
+      delete postObject._userId;
+      Post.findOne({_id: req.params.id})
+          .then((post) => {
+              if (post.userId != req.auth.userId) {
+                res.status(401).json({ message :'Vous ne pouvez pas modifier ce post'});
+              } 
+              //ajouter possibilité qu'un admin level 1 modifie
+              //else if (post.level != 1) {
+              // res.status(401).json({message : 'Vous ne pouvez pas modifier ce post'});
+             // }
+              else {
+                  Post.updateOne({ _id: req.params.id}, { ...postObject, _id: req.params.id})
+                  .then(() => res.status(200).json({message : 'Objet modifié!'}))
+                  .catch(error => res.status(401).json({ error }));
+              }
+          })
+          .catch((error) => {
+              res.status(400).json({ error });
+          });
+   };
+    
+   exports.deletePost = (req, res, next) => {
+    // récupère le Post, gère s'il existe ou non
+    const postObject =req.file? {
+      ...JSON.parse(req.body.post),
+      imageUrl: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`,
+    } : {...req.body};
+    
+      delete postObject._userId;
+      Post.findOne({_id: req.params.id})
+          .then((post) => {
+              if (post.userId != req.auth.userId) {
+                res.status(401).json({ message :'Vous ne pouvez pas supprimer ce post'});
+              } 
+              //ajouter possibilité qu'un admin level 1 modifie
+              //else if (post.level != 1) {
+              // res.status(401).json({message : 'Vous ne pouvez pas modifier ce post'});
+             // }
+              else {
+                  Post.deleteOne({ _id: req.params.id}, { ...postObject, _id: req.params.id})
+                  .then(() => res.status(200).json({message : 'Post supprimé!'}))
+                  .catch(error => res.status(401).json({ error }));
+              }
+          })
+          .catch((error) => {
+              res.status(400).json({ error });
+          });
+   };
 
-/**
- * Pour supprimer une post
- * @param {*} req 
- * @param {*} res 
- * @param {*} next 
- */
+/*
   exports.deletePost = (req, res, next) => {
     // m^me tests que pour modify post
     Post.findOne({ _id: req.params.id })
@@ -95,7 +122,7 @@ exports.getAllPost = (req, res, next) => {
       })
       .catch(error => res.status(500).json({ error }));
   };
-
+*/
   //like dislike une post
 
 /*
