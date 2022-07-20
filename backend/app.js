@@ -27,6 +27,7 @@ app.use('/images', express.static(path.join(__dirname, 'images')));
 
 app.use('/api/post', postRoutes);
 app.use('/api/auth', userRoutes);
+
 /* ancien serveur pour la mise en place
 app.use((req, res, next) => {
   console.log('Requête reçue !');

@@ -1,5 +1,6 @@
 const Post = require('../models/post');
 const fs = require('fs'); 
+const User = require('../models/user');
 
 // pour afficher tous les post
 exports.getAllPost = (req, res, next) => {
@@ -60,22 +61,38 @@ exports.getAllPost = (req, res, next) => {
     } : {...req.body};
     
       delete postObject._userId;
+      console.log(req.params.id);
       Post.findOne({_id: req.params.id})
-          .then((post) => {
-              if (post.userId != req.auth.userId) {
+           .then((post) => {
+            //   console.log(post);
+            //   console.log(req.auth.userId)
+            //   User.findOne({_id:req.auth.userId})
+            //   .then ((user) => {
+            //     console.log(user)
+            //   })
+            //   .catch((error) => {
+            //     res.status(400).json ({error});
+            //   }) 
+              
+              if (post.userId =!req.auth.userId) {
+                console.log(req.auth.userId)
                 res.status(401).json({ message :'Vous ne pouvez pas modifier ce post'});
               } 
               //ajouter possibilité qu'un admin level 1 modifie
               //else if (post.level != 1) {
-              // res.status(401).json({message : 'Vous ne pouvez pas modifier ce post'});
+              // res.status(401).json({message : 'Vous ne pouvez pas modmariifier ce post'});
              // }
+             
               else {
                   Post.updateOne({ _id: req.params.id}, { ...postObject, _id: req.params.id})
                   .then(() => res.status(200).json({message : 'Objet modifié!'}))
                   .catch(error => res.status(401).json({ error }));
               }
-          })
+            })
+              
+          
           .catch((error) => {
+            console.log('vérif');
               res.status(400).json({ error });
           });
    };
