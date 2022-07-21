@@ -85,7 +85,7 @@ exports.getAllPost = (req, res, next) => {
              
               else {
                   Post.updateOne({ _id: req.params.id}, { ...postObject, _id: req.params.id})
-                  .then(() => res.status(200).json({message : 'Objet modifié!'}))
+                  .then(() => res.status(200).json({message : 'votre post est  modifié!'}))
                   .catch(error => res.status(401).json({ error }));
               }
             })
