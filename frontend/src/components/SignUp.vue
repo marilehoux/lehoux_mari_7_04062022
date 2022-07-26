@@ -16,7 +16,9 @@
                 <input type="checkbox" class="form-check-input" id="exampleCheck1">
                 <label class="form-check-label" for="exampleCheck1">Check me out</label>
                 </div> -->
-                <button type="submit" class="btn btn-primary">S'inscrire</button>
+                <div class=" d-grid gap-2 d-flex justify-content-end">
+                    <button type="submit" class="btn btn-primary">S'inscrire</button>
+                </div>
             </form>
         </div>
     </div>
