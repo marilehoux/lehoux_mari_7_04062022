@@ -30,9 +30,11 @@ exports.signup = (req, res, next) => {
             }
             res.status(200).json({
               userId: user._id,
+              email: user.email,
+              level: user.level,
               token: jwt.sign(
-                { userId: user._id }, // les données à encoder , le payload
-                'RANDOM_TOKEN_SECRET', // clé d'encodage plus longue en dev
+                { userId: user._id, level: user.level, email: user.email }, // les données à encoder , le payload
+                'RANDOM_TOKEN_SECRET', // clé d'encodage plus longue en dev process env
                 { expiresIn: '24h' }
               )
             });
