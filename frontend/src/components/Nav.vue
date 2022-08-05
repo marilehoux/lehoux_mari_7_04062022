@@ -1,9 +1,10 @@
 <template>
-<div class="container">
+<div class="card">
 
-  <nav class="navbar d-flex justify-content-center">
-      <img  class="row img-thumbnail img-fluid rounded w-50"  src="../assets/logogroupo.png" alt="">
-      <h1 class="row py-2 text-center">Bienvenue sur votre réseau social!</h1>
+  <div class="card-body justify-content-center">
+      <img  class="img-thumbnail img-fluid rounded w-100"  src="../assets/logogroupo.png" alt="">
+      <h1 class="py-2 text-center">Bienvenue sur votre réseau social!</h1>
+      <button class="btn btn-sm btn-outline-secondary">Se déconnecter</button>
       <!-- <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -14,7 +15,7 @@
             </li>
           </ul>
         </div> -->
-  </nav>
+  </div>
 </div>
 </template>
 

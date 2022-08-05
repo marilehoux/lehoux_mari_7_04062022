@@ -4,9 +4,16 @@ const User = require('../models/user');
 
 // pour afficher tous les post
 exports.getAllPost = (req, res, next) => {
-	Post.find()
+	Post.find().populate('userId', ['email'])
 	.then(
 		(posts) => {
+			console.log(posts);
+			// for (let post of posts) {
+			// 	console.log(post.userId);
+			// 	let 
+			// }
+			// boucle tous les posts pour récuperer id User
+			// et regarder dans la base de données pour récuperre pseudo (post.name par ex) 
 			res.status(200).json(posts);
 		}
 		)
@@ -21,7 +28,6 @@ exports.getAllPost = (req, res, next) => {
 		
 		//pour créer un post enregistre l'image si elle existe
 exports.createPost = (req, res, next) => {
-	console.log(req.body)
 	const postObject = req.body;
 	
 	delete postObject._id;
@@ -33,7 +39,8 @@ exports.createPost = (req, res, next) => {
 		: null
 	});
 	post.save()
-	.then(() => res.status(201).json({ message: 'post enregistré!'}))
+	.then((post) => res.status(201).json({ message: 'post enregistré!', post}))
+
 	.catch(error => res.status(400).json({error}));
 };
 		
@@ -61,22 +68,16 @@ exports.modifyPost = (req, res, next) => {
 	} : {...req.body};
 	
 	delete postObject._userId;
-	console.log(req.params.id);
 	Post.findOne({_id: req.params.id})
 	.then((post) => {
-		//   console.log(post);
-		//   console.log(req.auth.userId)
 		User.findOne({_id:req.auth.userId})
 		.then ((user) => {
-			console.log(user);
-			
 			if (post.userId == req.auth.userId || user.level == 1) {
 				Post.updateOne({ _id: req.params.id}, { ...postObject, _id: req.params.id})
 				.then(() => res.status(200).json({message : 'votre post est  modifié!'}))
 				.catch(error => res.status(401).json({ error }));
 			}
 			else {  
-				console.log(req.auth.userId)
 				res.status(401).json({ message :'Vous ne pouvez pas modifier ce post'});
 			} 
 		})
@@ -85,7 +86,6 @@ exports.modifyPost = (req, res, next) => {
 		}) 
 	})
 	.catch((error) => {
-		console.log('vérif');
 		res.status(400).json({ error });
 	});
 };
@@ -101,11 +101,8 @@ exports.deletePost = (req, res, next) => {
 	
 	Post.findOne({_id: req.params.id})
 	.then((post) => {
-		//   console.log(post);
-		//   console.log(req.auth.userId)
 		//User.findOne({_id:req.auth.userId})
 		//.then ((user) => {
-			//console.log(user);
 			
 			if (post.userId == req.auth.userId || req.auth.userLevel >= 1) {
 				Post.deleteOne({ _id: req.params.id}, { ...postObject, _id: req.params.id})
@@ -113,7 +110,6 @@ exports.deletePost = (req, res, next) => {
 				.catch(error => res.status(401).json({ error }));
 			}
 			else {  
-				console.log(req.auth.userId)
 				res.status(401).json({ message :'Vous ne pouvez pas supprimer ce post'});
 			} 
 		// })

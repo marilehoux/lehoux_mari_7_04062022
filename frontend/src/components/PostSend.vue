@@ -8,7 +8,7 @@
                     <textarea v-model="post.content" class="form-control" id="newPost" rows="3"></textarea>
                 </div>
                 <div class="input-group">
-                    <span class="display-6"><i class="bi bi-card-image"></i></span>
+                    <a class="btn btn-outline-primary"><i class="bi bi-card-image me-2"></i>Photo</a>
                 </div>
                 <div class=" d-grid gap-2 d-flex justify-content-end">
                     <button type="submit" class="btn btn-primary">Partager</button>
@@ -34,6 +34,7 @@ export default {
         }
     }
   },
+  
 
   methods : {
     createPost() {
@@ -43,7 +44,7 @@ export default {
             }
         })
         .then((resp) => {
-            console.log(resp);
+            this.$emit ('post-created', resp.data.post);
             this.post.content = '';
         })
         .catch((error) => {
