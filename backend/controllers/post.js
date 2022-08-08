@@ -70,8 +70,8 @@ exports.modifyPost = (req, res, next) => {
 	delete postObject._userId;
 	Post.findOne({_id: req.params.id})
 	.then((post) => {
-		// User.findOne({_id:req.auth.userId})
-		//.then ((user) => {
+		User.findOne({_id:req.auth.userId})
+		.then ((user) => {
 			if (post.userId == req.auth.userId || user.level == 1) {
 				Post.updateOne({ _id: req.params.id}, { ...postObject, _id: req.params.id})
 				.then(() => res.status(200).json({message : 'votre post est  modifié!', post}))
@@ -80,6 +80,10 @@ exports.modifyPost = (req, res, next) => {
 			else {  
 				res.status(401).json({ message :'Vous ne pouvez pas modifier ce post'});
 			} 
+		})
+		.catch ((error) => {
+			res.status(400).json({ error });
+		})
 		
 	})
 	.catch((error) => {

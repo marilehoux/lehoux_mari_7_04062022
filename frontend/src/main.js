@@ -4,7 +4,9 @@ import router from './router'
 //import store from './store'
 //import appController from '@/js/app/controller.js'
 // import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
-//import './assets/css/style.css.map'
+
+
+import './assets/css/style.css'
 //import bootstrap from 'bootstrap';
 
 
