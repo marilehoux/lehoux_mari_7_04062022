@@ -3,7 +3,7 @@
     <StartCard v-if="!user"/>
     <div v-else class="my-3">
         <PostSend :user="user" :posts="posts" @post-created="addPostToCollection" />
-        <PostList :user="user" :posts="posts" @post-modified="refreshPost" @post-deleted="removePost" />
+        <PostList :user="user" :posts="posts" @post-modified="refreshPost" @post-deleted="removePost" @post-liked="refreshPost"/>
     </div>
 </div>
 </template>
@@ -99,7 +99,8 @@ export default {
             if (index !== false){
                 this.posts.splice(index , 1)
             }
-        }
+        },
+
     },
 
 

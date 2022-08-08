@@ -14,7 +14,9 @@ router.put('/:id', auth, multer, postCtrl.modifyPost); // met à jour le post av
 // Pour suprimer un post
 router.delete('/:id', auth, multer, postCtrl.deletePost); // supprime le post avec l'id fourni
 
-//router.post('/:id/like', auth, postCtrl.like); // enregistre un like id userId fourni
+router.post('/:id/like', auth, postCtrl.likePost);
+// définit le statut like le post userId fourni
+
 module.exports = router;
 
 

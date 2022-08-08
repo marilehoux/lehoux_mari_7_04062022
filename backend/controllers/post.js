@@ -1,6 +1,7 @@
 const Post = require('../models/post');
 const fs = require('fs'); 
 const User = require('../models/user');
+const { query } = require('express');
 
 // pour afficher tous les post
 exports.getAllPost = (req, res, next) => {
@@ -37,7 +38,7 @@ exports.createPost = (req, res, next) => {
 		? `${req.protocol}://${req.get('host')}/images/${req.file.filename}`: null,
 	});
 	post.save()
-	.then((post) => res.status(201).json({ message: 'post enregistré!', post}))
+	.then((post) => res.status(201).json({ message: 'Post enregistré!', post}))
 
 	.catch(error => res.status(400).json({error}));
 };
@@ -79,10 +80,7 @@ exports.modifyPost = (req, res, next) => {
 			else {  
 				res.status(401).json({ message :'Vous ne pouvez pas modifier ce post'});
 			} 
-		// })
-		// .catch((error) => {
-		// 	res.status(400).json ({error});
-		// }) 
+		
 	})
 	.catch((error) => {
 		res.status(400).json({ error });
@@ -122,35 +120,63 @@ exports.deletePost = (req, res, next) => {
 }
 				
 				
+
+
+	exports.likePost =(req, res, next) => {
+		console.log('id', req.params.id);
+		console.log('user', req.auth.userId);
+		if(req.auth.userId){
+			Post.findOne({_id: req.params.id})
+				.then(post => {
+					let query = {};
+					let index = post.usersLiked.findIndex(uid => uid == req.auth.userId);
+
+					if (index > -1) {
+						query.$pull = {usersLiked:req.auth.userId};
+						query.$inc = {likes: -1};
+						post.likes -=1;
+						post.usersLiked.splice(index , 1);
+					}
+					else {
+						query.$push = {usersLiked:req.auth.userId};
+						query.$inc = {likes: +1}
+						post.likes +=1;
+						post.usersLiked.push(req.auth.userId);
+					}
+					Post.updateOne(
+						{ _id: req.params.id }, query)
+						.then(() => res.status(200).json({ message: 'enregistré', post }))
+						.catch(error => res.status(400).json({ error }));
+				})
+				.catch(error => res.status(404).json({ error }));
+		}
+		// if (req.body.like === 1) {
+		// 	Post.updateOne(
+		// 	{ _id: req.params.id },
+		// 	{
+		// 	$inc: { likes: 1 },
+		// 	$push: { usersLiked: req.auth.userId }
+		// 	})
+
+		// 	.then(() => res.status(200).json({ message: '+1 like !' }))
+		// 	.catch(error => res.status(400).json({ error }));
+
+		// } else (req.body.like === -1); {
+		// 	Post.updateOne(
+		// 	{ _id: req.params.id },
+		// 	{
+		// 		$inc: { likes: -1 },
+		// 		$push: { userLiked: req.auth.userId }
+		// 	})
+
+		// 	.then(() => res.status(200).json({ message: '+1 dislike !' }))
+		// 	.catch(error => res.status(400).json({ error }))
+		// 	};	
+	}
 /*
-
-exports.likePost =(req, res, next) => {
-const id = req.params.id;
-if (req.body.like === 1) {
-Sauce.updateOne(
-{ _id: req.params.id },
-{
-$inc: { likes: 1 },
-$push: { usersLiked: req.body.userId }
-})
-
-.then(() => res.status(200).json({ message: '+1 like !' }))
-.catch(error => res.status(400).json({ error }))
-
-} else if (req.body.like === -1) {
-Sauce.updateOne(
-{ _id: req.params.id },
-{
-	$inc: { dislikes: 1 },
-	$push: { usersDisliked: req.body.userId }
-})
-
-.then(() => res.status(200).json({ message: '+1 dislike !' }))
-.catch(error => res.status(400).json({ error }))
-
 } else {
-Sauce.findOne({ _id: req.params.id })
-.then(sauce => {
+Post.findOne({ _id: req.params.id })
+.then(post => {
 	if (sauce.usersLiked.includes(req.body.userId)) {
 		Sauce.updateOne({ _id: req.params.id },
 			{

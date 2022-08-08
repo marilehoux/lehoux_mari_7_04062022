@@ -57,6 +57,7 @@ export default {
                 .then(() => {
                     this.$emit ('post-modified', JSON.parse( JSON.stringify(this.post)));
                     this.post.content = '';
+                    alert('Votre post a été modifié');
                 })
                 .catch((error) => {
                     alert(error);
