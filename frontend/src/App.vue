@@ -47,7 +47,7 @@ export default {
   mounted () {
     /**
      * lire les informations utilisateur stockées dans le session storage
-     * si on trouve une session on l'affecte à la vairaible user de data
+     * si on trouve une session on l'affecte à la variable user de data
      * via fonction authChange
      */
     const userId = sessionStorage.getItem("userId");

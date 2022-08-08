@@ -39,6 +39,7 @@ export default {
     /**
      * envoie une requête de connexion à l'API avec nom 
      * user et password fourni dans le formulaire
+     * enregistre dans le sessionStorage les informations reçues de l'API
      */
     signIn() {
         axios.post ("http://localhost:3000/api/auth/login", this.user)

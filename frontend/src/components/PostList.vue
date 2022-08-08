@@ -1,7 +1,7 @@
 <template>
     <div method="get"  class="card my§3">
         <div class="card-header"><h2>Discussion</h2></div>
-        <div  class="card-body"><PostItem v-for="post in posts" :key="post._id" :post="post" /></div>
+        <div  class="card-body"><PostItem :user="user" v-for="post in posts" :key="post._id" :post="post" @post-modified="modifyPost" @post-deleted="deletePost" /></div>
     </div>
 </template>
 
@@ -18,6 +18,14 @@ export default {
         user: Object,
         posts: Array,
     },
+    methods: {
+        modifyPost(post){
+            this.$emit('post-modified', post);
+        },
+        deletePost(post){
+            this.$emit('post-deleted', post);
+        }
+    }
    
 }
 </script>

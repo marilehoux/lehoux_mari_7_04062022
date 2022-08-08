@@ -4,7 +4,8 @@ import router from './router'
 //import store from './store'
 //import appController from '@/js/app/controller.js'
 // import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
-import './assets/css/style.css'
+//import './assets/css/style.css.map'
+//import bootstrap from 'bootstrap';
 
 
 const app = createApp(App);
@@ -14,5 +15,6 @@ app.use(router);
 //app.use(appController);
 // app.use(BootstrapVue);
 // app.use(IconsPlugin);
+//app.use(bootstrap);
 
 app.mount('#app');

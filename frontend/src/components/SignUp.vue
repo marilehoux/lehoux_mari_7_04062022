@@ -40,10 +40,6 @@ export default {
     signUp() {
         
         axios.post ("http://localhost:3000/api/auth/signup", this.user)
-        .then ((resp) => {
-            console.log(resp);
-            //isConnected = true;
-        })
         .catch((err)=> {
             console.error(err);
             alert ('le serveur ne répond pas');

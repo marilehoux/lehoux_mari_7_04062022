@@ -3,7 +3,7 @@
     <StartCard v-if="!user"/>
     <div v-else class="my-3">
         <PostSend :user="user" :posts="posts" @post-created="addPostToCollection" />
-        <PostList :user="user" :posts="posts" />
+        <PostList :user="user" :posts="posts" @post-modified="refreshPost" @post-deleted="removePost" />
     </div>
 </div>
 </template>
@@ -31,12 +31,13 @@ export default {
     data () {
         return {
             posts: []
+
         }
     },
 
     watch: {
         /**
-         * recharge la listes des pposts lorsqu'un utilisateur se connecte,
+         * recharge la listes des posts lorsqu'un utilisateur se connecte,
          * vide la liste lorsque l'utilisateur est déconnecté.
          * @param {Object} value        le nouvel état de la variable utilisateur
          */
@@ -74,6 +75,30 @@ export default {
 
         addPostToCollection(post) {
             this.posts.unshift(post);
+        },
+
+        /**
+         * rafraîchit les informations d'un post déjà chargé au niveau de data.post
+         * On parcourt l'ensemble des clés contenues
+         * dans le post passé en paramètre afin
+         * d'affecter les valeurs sur l'élément contenu dans data.post
+         * 
+         * @param {Object}  post les infomations du post à actualiser
+         */
+        refreshPost(post) {
+            let found = this.posts.find(e => e._id === post._id);
+            if (found) {
+                for (const key in post){
+                    found[key] = post[key];
+                }
+            }
+        },
+
+        removePost(post){
+            let index = this.posts.findIndex(e => e._id === post._id);
+            if (index !== false){
+                this.posts.splice(index , 1)
+            }
         }
     },
 
