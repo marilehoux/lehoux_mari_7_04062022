@@ -2,7 +2,7 @@
     <div class="card my-3">
         <h2 v-if="!edit" class="card-header">Participer</h2>
         <div class="card-body">
-            <form method="post" id="form-post" enctype="multipart/form-data" @submit.prevent="createPost()">
+            <form method="post" :id="'form-post'+postModif._id" enctype="multipart/form-data" @submit.prevent="createPost()">
                 <div class="mb-3">
                     <label for="newPost" class="form-label">Quoi de neuf aujourd'hui?</label>
                     <textarea v-model="post.content" class="form-control" name="content" id="newPost" rows="3"></textarea>
@@ -20,6 +20,7 @@
     </div>
 </template>
 <script>
+
 import axios from 'axios';
 
 export default {
@@ -44,18 +45,26 @@ export default {
   methods : {
 
     createPost() {
-        let form = document.getElementById('form-post');
+        let form = document.getElementById('form-post'+this.postModif._id);
         let data = new FormData(form);
+        //let headers = data.getHeaders();
+        //headers['Authorization'] = 'Bearer '+this.user.token;
+        // data.append('content', this.post.content);
+
+        // let imageEl = document.getElementById('newImage');
+        // data.append('image', imageEl.files[0]);
+        for (const pair of data.entries()) {
+        console.log(`${pair[0]}, ${pair[1]}`);}
 
             if(this.edit) {
                 let url = 'http://localhost:3000/api/post/'+this.post._id;
-                axios.put(url, this.post, {
+                axios.put(url, data, {
                     headers: {
                         'Authorization': 'Bearer '+this.user.token
                     }
                 })
-                .then(() => {
-                    this.$emit ('post-modified', JSON.parse( JSON.stringify(this.post)));
+                .then((resp) => {
+                    this.$emit ('post-modified', resp.data.post);
                     this.post.content = '';
                     alert('Votre post a été modifié');
                 })
@@ -83,7 +92,6 @@ export default {
         }
     },
 
-  
 
   mounted () {
     if(this.edit) {

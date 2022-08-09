@@ -2,7 +2,7 @@
 <div>
     <StartCard v-if="!user"/>
     <div v-else class="my-3">
-        <PostSend :user="user" :posts="posts" @post-created="addPostToCollection" />
+        <PostSend :user="user" :post-modif="{_id:0}" @post-created="addPostToCollection" />
         <PostList :user="user" :posts="posts" @post-modified="refreshPost" @post-deleted="removePost" @post-liked="refreshPost"/>
     </div>
 </div>
@@ -86,6 +86,7 @@ export default {
          * @param {Object}  post les infomations du post à actualiser
          */
         refreshPost(post) {
+            console.log(post);
             let found = this.posts.find(e => e._id === post._id);
             if (found) {
                 for (const key in post){
