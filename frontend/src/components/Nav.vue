@@ -1,5 +1,5 @@
 <template>
-<div class="card">
+<div class="card mt-3">
 
   <div class="card-body justify-content-center">
       <img  class="img-thumbnail img-fluid rounded w-100"  src="../assets/logogroupo.png" alt="">

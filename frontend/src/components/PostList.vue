@@ -1,7 +1,7 @@
 <template>
-    <div method="get"  class="card my§3">
+    <div method="get"  class="card">
         <div class="card-header"><h2>Discussion</h2></div>
-        <div  class="card-body">
+        <div  class="card-body bg-light">
             <PostItem :user="user" v-for="post in posts" :key="post._id" 
             :post="post" 
             @post-modified="modifyPost" 

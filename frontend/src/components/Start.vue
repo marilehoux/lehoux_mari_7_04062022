@@ -4,7 +4,7 @@
         <div class="card-body">
                 <div class=" input-group d-grid gap-2 d-flex justify-content-center">
                   <router-link :to="{path: '/sign-up'}" custom v-slot="{navigate, href}">
-                    <a :href="href" @click="navigate" class="btn btn-secondary">Créer un compte</a>
+                    <a :href="href" @click="navigate" class="btn btn-light">Créer un compte</a>
                   </router-link>
                   <router-link :to="{path: '/sign-in'}" custom v-slot="{navigate, href}">
                     <a :href="href" @click="navigate" class="btn btn-primary">Se connecter</a>
